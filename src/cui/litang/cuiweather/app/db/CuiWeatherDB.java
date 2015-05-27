@@ -64,6 +64,7 @@ public class CuiWeatherDB {
 			ContentValues contentValues = new ContentValues();
 			contentValues.put("city_name", city.getCityName());
 			contentValues.put("city_code", city.getCityCode());
+			contentValues.put("province_id", city.getProvinceId());
 			db.insert("City", null, contentValues);
 		}
 	}
@@ -77,6 +78,7 @@ public class CuiWeatherDB {
 			ContentValues contentValues = new ContentValues();
 			contentValues.put("county_name", county.getCountyName());
 			contentValues.put("county_code", county.getCountyCode());
+			contentValues.put("city_id", county.getCityId());
 			db.insert("County", null, contentValues);
 		}
 	}
@@ -116,10 +118,10 @@ public class CuiWeatherDB {
 	 * @param ProvinceId 当前Province的ID
 	 * @return List<City> City列表
 	 */
-	public List<City> loadCity(int ProvinceId) {
+	public List<City> loadCity(int provinceId) {
 		
 		ArrayList<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("City", null, "province_id = ?", new String[]{String.valueOf(ProvinceId)}, null, null, null);
+		Cursor cursor = db.query("City", null, "province_id = ?", new String[]{String.valueOf(provinceId)}, null, null, null);
 		
 		if(cursor.moveToFirst()){
 			do{
@@ -127,6 +129,7 @@ public class CuiWeatherDB {
 				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
 				city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
+				city.setProvinceId(provinceId);
 				list.add(city);
 			}while(cursor.moveToNext());
 		}
@@ -157,6 +160,7 @@ public class CuiWeatherDB {
 				county.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
 				county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+				county.setCityId(cityId);
 				list.add(county);
 			}while(cursor.moveToNext());
 		}

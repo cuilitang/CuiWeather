@@ -48,7 +48,7 @@ public class ResponseStringUtils {
 	 * @param response 升级数据字符串
 	 * @return 解析是否成功
 	 */
-	public synchronized static boolean handleCityResponse(CuiWeatherDB cuiWeatherDB,String response) {
+	public synchronized static boolean handleCityResponse(CuiWeatherDB cuiWeatherDB,String response,int provinceId) {
 		if(!TextUtils.isEmpty(response)){
 			String[] allc = response.split(",");
 			if(allc!=null&&allc.length>0){
@@ -57,6 +57,8 @@ public class ResponseStringUtils {
 					City city = new City();
 					city.setCityName(cityDetail[1]);
 					city.setCityCode(cityDetail[0]);
+					city.setProvinceId(provinceId);
+					
 					
 					cuiWeatherDB.saveCity(city);
 					
@@ -75,7 +77,7 @@ public class ResponseStringUtils {
 	 * @param response 升级数据字符串
 	 * @return 解析是否成功
 	 */
-	public synchronized static boolean handleCountyResponse(CuiWeatherDB cuiWeatherDB,String response) {
+	public synchronized static boolean handleCountyResponse(CuiWeatherDB cuiWeatherDB,String response,int cityId) {
 		if(!TextUtils.isEmpty(response)){
 			String[] allc = response.split(",");
 			if(allc!=null&&allc.length>0){
@@ -84,6 +86,7 @@ public class ResponseStringUtils {
 					County county = new County();
 					county.setCountyName(countyDetail[1]);
 					county.setCountyCode(countyDetail[0]);
+					county.setCityId(cityId);
 					cuiWeatherDB.saveCounty(county);
 					
 				}

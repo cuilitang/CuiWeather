@@ -151,9 +151,9 @@ public class ChooseAreaActivity extends Activity {
 				if("province".equals(type)){
 					result = ResponseStringUtils.handleProvinceResponse(cuiWeatherDB, response);
 				}else if ("city".equals(type)) {
-					result = ResponseStringUtils.handleCityResponse(cuiWeatherDB, response);
+					result = ResponseStringUtils.handleCityResponse(cuiWeatherDB, response,selectedProvince.getId());
 				}else if ("county".equals(type)) {
-					result = ResponseStringUtils.handleCountyResponse(cuiWeatherDB, response);
+					result = ResponseStringUtils.handleCountyResponse(cuiWeatherDB, response,selectedCity.getId());
 					
 				}
 				
