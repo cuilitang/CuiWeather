@@ -26,13 +26,16 @@ public class ChooseAreaActivity extends Activity {
 	private TextView tv_title;
 	private List<String> dataList = new ArrayList<String>();
 	private CuiWeatherDB cuiWeatherDB;
-	public static final int LEVEL_PROVICE = 0;
+	public static final int LEVEL_PROVINCE = 0;
 	public static final int LEVEL_CITY = 1;
 	public static final int LEVEL_COUNTY = 2;
 	private int currentLevel;
 	private List<Province> provinceList;
 	private List<City> cityList;
 	private List<County> countyList;
+	private ArrayAdapter<String> adapter;
+	private Province selectedProvince;
+	private City selectedCity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class ChooseAreaActivity extends Activity {
 		
 		lv = (ListView) findViewById(R.id.lv);
 		tv_title = (TextView) findViewById(R.id.tv_title);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,dataList);
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,dataList);
 		lv.setAdapter(adapter);
 		
 		cuiWeatherDB = CuiWeatherDB.getInstance(this);
@@ -56,11 +59,11 @@ public class ChooseAreaActivity extends Activity {
 					int position, long id) {
 
 				
-				if(currentLevel==LEVEL_PROVICE){
-					provinceList.get(position);
+				if(currentLevel==LEVEL_PROVINCE){
+					selectedProvince = provinceList.get(position);
 					queryCities();
 				}else if(currentLevel==LEVEL_CITY){
-					cityList.get(position);
+					selectedCity = cityList.get(position);
 					queryCounties();
 				}
 			}
@@ -69,17 +72,60 @@ public class ChooseAreaActivity extends Activity {
 		queryProvince();
 	}
 
-	protected void queryCounties() {
-		// TODO Auto-generated method stub
+	private void queryCounties() {
+		countyList = cuiWeatherDB.loadCounty(selectedCity.getId());
 		
+		
+		if(countyList.size()>0){
+			dataList.clear();
+			for(County c:countyList){
+				dataList.add(c.getCountyName());
+			}
+			adapter.notifyDataSetChanged();
+			lv.setSelection(0);
+			tv_title.setText(selectedCity.getCityName());
+			currentLevel = LEVEL_COUNTY;
+		}else {
+			queryFromServer(selectedCity.getCityCode(),"county");
+		}
 	}
 
-	protected void queryCities() {
-		// TODO Auto-generated method stub
+	private void queryCities() {
+		cityList = cuiWeatherDB.loadCity(selectedProvince.getId());
 		
+		
+		if(cityList.size()>0){
+			dataList.clear();
+			for(City p:cityList){
+				dataList.add(p.getCityName());
+			}
+			adapter.notifyDataSetChanged();
+			lv.setSelection(0);
+			tv_title.setText(selectedProvince.getProvinceName());
+			currentLevel = LEVEL_CITY;
+		}else {
+			queryFromServer(selectedProvince.getProvinceCode(),"city");
+		}
 	}
 
 	private void queryProvince() {
+		provinceList = cuiWeatherDB.loadProvince();
+		
+		if(provinceList.size()>0){
+			dataList.clear();
+			for(Province p:provinceList){
+				dataList.add(p.getProvinceName());
+			}
+			adapter.notifyDataSetChanged();
+			lv.setSelection(0);
+			tv_title.setText("中国");
+			currentLevel = LEVEL_PROVINCE;
+		}else {
+			queryFromServer(null,"province");
+		}
+	}
+
+	private void queryFromServer(Object object, String string) {
 		// TODO Auto-generated method stub
 		
 	}
