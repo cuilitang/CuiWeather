@@ -47,8 +47,8 @@ public class CuiWeatherDB {
 	public void saveProvince(Province province){
 		if(province!=null){
 			ContentValues contentValues = new ContentValues();
-			contentValues.put("Province_name", province.getProvinceName());
-			contentValues.put("Province_code", province.getProvinceCode());
+			contentValues.put("province_name", province.getProvinceName());
+			contentValues.put("province_code", province.getProvinceCode());
 			db.insert("Province", null, contentValues);
 		}
 	}

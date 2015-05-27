@@ -79,6 +79,10 @@ public class ChooseAreaActivity extends Activity {
 		queryProvince();
 	}
 
+	/**
+	 * 查询数据，更新ui
+	 *   查询数据时候，会先去数据库load，若是为空，则queryFromServer，然后save在数据库中，然后再调用load  
+	 */
 	private void queryCounties() {
 		countyList = cuiWeatherDB.loadCounty(selectedCity.getId());
 		
@@ -204,6 +208,7 @@ public class ChooseAreaActivity extends Activity {
 			progressDialog.setMessage("正在加载...");
 			progressDialog.setCanceledOnTouchOutside(false);
 		}
+		progressDialog.show();
 	}
 	
 	private void closeProgressDialog(){
