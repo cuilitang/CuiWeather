@@ -15,8 +15,8 @@ public class CuiWeatheOpenHelper extends SQLiteOpenHelper {
 	
 	String SQL_CITY = "create table City("
 			+ "id integer primary key autoincrement,"
-			+ "province_name text,"
-			+ "province_code text,"
+			+ "city_name text,"
+			+ "city_code text,"
 			+ "province_id integer)";
 	
 	String SQL_COUNTY = "create table County("

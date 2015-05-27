@@ -27,8 +27,8 @@ public class ResponseStringUtils {
 				for (int i = 0; i < allp.length; i++) {
 					String[] provinceDetial = allp[i].split("\\|");
 					Province province = new Province();
-					province.setProvinceName(provinceDetial[0]);
-					province.setProvinceCode(provinceDetial[1]);
+					province.setProvinceName(provinceDetial[1]);
+					province.setProvinceCode(provinceDetial[0]);
 					
 					cuiWeatherDB.saveProvince(province);
 					
@@ -55,8 +55,8 @@ public class ResponseStringUtils {
 				for (int i = 0; i < allc.length; i++) {
 					String[] cityDetail = allc[i].split("\\|");
 					City city = new City();
-					city.setCityName(cityDetail[0]);
-					city.setCityCode(cityDetail[1]);
+					city.setCityName(cityDetail[1]);
+					city.setCityCode(cityDetail[0]);
 					
 					cuiWeatherDB.saveCity(city);
 					
@@ -82,8 +82,8 @@ public class ResponseStringUtils {
 				for (int i = 0; i < allc.length; i++) {
 					String[] countyDetail = allc[i].split("\\|");
 					County county = new County();
-					county.setCountyName(countyDetail[0]);
-					county.setCountyCode(countyDetail[1]);
+					county.setCountyName(countyDetail[1]);
+					county.setCountyCode(countyDetail[0]);
 					cuiWeatherDB.saveCounty(county);
 					
 				}
