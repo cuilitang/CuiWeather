@@ -8,16 +8,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class CuiWeatheOpenHelper extends SQLiteOpenHelper {
 
 	//Province、City、 County建表语句
-	String SQL_PROVICE = "create table Provice("
+	String SQL_PROVICE = "create table Province("
 			+ "id integer primary key autoincrement,"
-			+ "provice_name text,"
-			+ "provice_code text)";
+			+ "province_name text,"
+			+ "province_code text)";
 	
 	String SQL_CITY = "create table City("
 			+ "id integer primary key autoincrement,"
-			+ "provice_name text,"
-			+ "provice_code text,"
-			+ "provice_id integer)";
+			+ "province_name text,"
+			+ "province_code text,"
+			+ "province_id integer)";
 	
 	String SQL_COUNTY = "create table County("
 			+ "id integer primary key autoincrement,"

@@ -3,14 +3,13 @@ package cui.litang.cuiweather.app.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import cui.litang.cuiweather.app.model.City;
-import cui.litang.cuiweather.app.model.County;
-import cui.litang.cuiweather.app.model.Provice;
-import android.R.color;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import cui.litang.cuiweather.app.model.City;
+import cui.litang.cuiweather.app.model.County;
+import cui.litang.cuiweather.app.model.Province;
 
 public class CuiWeatherDB {
 	
@@ -42,15 +41,15 @@ public class CuiWeatherDB {
 	}
 	
 	/**
-	 * 插入provice值
-	 * @param provice provice对象
+	 * 插入Province值
+	 * @param Province Province对象
 	 */
-	public void saveProvice(Provice provice){
-		if(provice!=null){
+	public void saveProvince(Province province){
+		if(province!=null){
 			ContentValues contentValues = new ContentValues();
-			contentValues.put("provice_name", provice.getProviceName());
-			contentValues.put("provice_code", provice.getProviceCode());
-			db.insert("Provice", null, contentValues);
+			contentValues.put("Province_name", province.getProvinceName());
+			contentValues.put("Province_code", province.getProvinceCode());
+			db.insert("Province", null, contentValues);
 		}
 	}
 	
@@ -83,21 +82,21 @@ public class CuiWeatherDB {
 	}
 	
 	/**
-	 * 加载所有Provice列表
-	 * @return List<Provice>
+	 * 加载所有Province列表
+	 * @return List<Province>
 	 */
-	public List<Provice> loadProvice() {
+	public List<Province> loadProvince() {
 		
-		ArrayList<Provice> list = new ArrayList<Provice>();
-		Cursor cursor = db.query("Provice", null, null, null, null, null, null);
+		ArrayList<Province> list = new ArrayList<Province>();
+		Cursor cursor = db.query("Province", null, null, null, null, null, null);
 		
 		if(cursor.moveToFirst()){
 			do{
-				Provice provice = new Provice();
-				provice.setId(cursor.getInt(cursor.getColumnIndex("id")));
-				provice.setProviceName(cursor.getString(cursor.getColumnIndex("provice_name")));
-				provice.setProviceCode(cursor.getString(cursor.getColumnIndex("provice_code")));
-				list.add(provice);
+				Province Province = new Province();
+				Province.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				Province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
+				Province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
+				list.add(Province);
 			}while(cursor.moveToNext());
 		}
 		
@@ -113,14 +112,14 @@ public class CuiWeatherDB {
 	
 	
 	/**
-	 * 加载当前Provice下所有City列表
-	 * @param ProviceId 当前Provice的ID
+	 * 加载当前Province下所有City列表
+	 * @param ProvinceId 当前Province的ID
 	 * @return List<City> City列表
 	 */
-	public List<City> loadCity(int ProviceId) {
+	public List<City> loadCity(int ProvinceId) {
 		
 		ArrayList<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("City", null, "provice_id = ?", new String[]{String.valueOf(ProviceId)}, null, null, null);
+		Cursor cursor = db.query("City", null, "province_id = ?", new String[]{String.valueOf(ProvinceId)}, null, null, null);
 		
 		if(cursor.moveToFirst()){
 			do{
