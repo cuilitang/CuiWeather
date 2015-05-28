@@ -1,5 +1,14 @@
 package cui.litang.cuiweather.app.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import cui.litang.cuiweather.app.db.CuiWeatherDB;
 import cui.litang.cuiweather.app.model.City;
@@ -99,7 +108,66 @@ public class ResponseStringUtils {
 	}
 	
 	
-	
+	/**
+	 * 解析天气信息json
+	 * @param context
+	 * @param response  返服务器返回的天气信息json字符串
+	 */
+	public static void handleWeatherResponse(Context context,String response) {
+		
+		try{
+			JSONObject jsonObject = new JSONObject(response);
+			JSONObject weatherinfoNode = jsonObject.getJSONObject("weatherinfo");
+			String cityName = weatherinfoNode.getString("city");
+			String cityid = weatherinfoNode.getString("cityid");
+			String temp1 = weatherinfoNode.getString("temp1");
+			String temp2 = weatherinfoNode.getString("temp2");
+			String weatherDesc = weatherinfoNode.getString("weather");
+			String ptime = weatherinfoNode.getString("ptime");
+			saveWeahterInfo(context,cityName,cityid,temp1,temp2,weatherDesc,ptime);
+			
+			
+			
+			
+			
+			
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+
+	/**
+	 * 将天气信息存储到SharedPerference
+	 * @param context
+	 * @param cityName
+	 * @param cityid
+	 * @param temp1
+	 * @param temp2
+	 * @param weatherDesc
+	 * @param ptime
+	 */
+	private static void saveWeahterInfo(Context context,String cityName,String cityid,String temp1,String temp2,String weatherDesc,String ptime) {
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyy年M月d日",Locale.CHINA);
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		editor.putBoolean("city_selected", true);
+		editor.putString("city_name", cityName);
+		editor.putString("city_id", cityid);
+		editor.putString("temp1", temp1);
+		editor.putString("temp2", temp2);
+		editor.putString("weather_desc", weatherDesc);
+		editor.putString("p_time", ptime);
+		editor.putString("current_date", format.format(new Date()));
+		editor.commit();
+		
+		
+		
+	}
 	
 
 }
