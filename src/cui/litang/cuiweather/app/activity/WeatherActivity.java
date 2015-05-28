@@ -6,17 +6,20 @@ import cui.litang.cuiweather.app.util.HttpCallbackListener;
 import cui.litang.cuiweather.app.util.HttpUtils;
 import cui.litang.cuiweather.app.util.ResponseStringUtils;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements OnClickListener{
 	
 	private LinearLayout layout_weather_info;
 	private TextView tv_city_name;
@@ -26,6 +29,8 @@ public class WeatherActivity extends Activity {
 	private TextView tv_title;
 	private TextView tv_weather_desc;
 	private TextView tv_temp1;
+	private Button btn_switch_city;
+	private Button btn_refresh_weather;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,13 @@ public class WeatherActivity extends Activity {
 		}else {
 			showWeather();
 		}
+		
+		//手动刷新天气 和 更换城市  两个功能
+		btn_refresh_weather = (Button) findViewById(R.id.btn_refresh_weather);
+		btn_switch_city = (Button) findViewById(R.id.btn_switch_city);
+		
+		btn_refresh_weather.setOnClickListener(this);
+		btn_switch_city.setOnClickListener(this);
 	}
 
 	/**
@@ -136,6 +148,34 @@ public class WeatherActivity extends Activity {
 	private void queryWeatherInfo(String weatherCode) {
 		String address = "http://www.weather.com.cn/data/cityinfo/"+weatherCode+".html";
 		queryFromServer(address, "weatherCode");
+	}
+
+	/**
+	 * 手动更新天气和更换城市功能
+	 */
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_refresh_weather:
+			tv_publish_text.setText("更新中...");
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+			String cityid = preferences.getString("city_id", "");
+			if(!TextUtils.isEmpty(cityid)){
+				queryWeatherInfo(cityid);
+			}
+			
+			break;
+		case R.id.btn_switch_city:
+			
+			Intent intent = new Intent(this, ChooseAreaActivity.class);
+			intent.putExtra("from_weather_activity", true);
+			startActivity(intent);
+			finish();
+			break;
+
+		default:
+			break;
+		}
 	}
 
 }

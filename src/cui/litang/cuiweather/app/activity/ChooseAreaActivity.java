@@ -46,14 +46,19 @@ public class ChooseAreaActivity extends Activity {
 	private Province selectedProvince;
 	private City selectedCity;
 	private ProgressDialog progressDialog;
+	
+	//是否从天气界面转过来
+	private Boolean isFromWeatherActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		//若是有已经选中的默认城市，则直接进入天气显示，不再从选择地域开始
+		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected", false)){
+		//若是有已经选中的默认城市，则直接进入天气显示，不再从选择地域开始
+		//若是不是从天气界面转回来的（更换默认城市），则直接进入天气显示界面，若是从天气界面转回来的，则继续执行选择地域功能
+		if(prefs.getBoolean("city_selected", false)&&!isFromWeatherActivity){
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -243,6 +248,9 @@ public class ChooseAreaActivity extends Activity {
 		}else if (currentLevel==LEVEL_CITY) {
 			queryProvince();
 			
+		}else if (isFromWeatherActivity) {
+			Intent intent = new Intent(this, WeatherActivity.class);
+			startActivity(intent);
 		}else{
 			finish();
 		}
