@@ -24,6 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name="cui.litang.cuiweather.app.activity.WeatherActivity"></activity>
+        <receiver android:name="cui.litang.cuiweather.app.receiver.AutoupdateRecevier"></receiver>
+        <service android:name="cui.litang.cuiweather.app.service.AutoupdateService"></service>
     </application>
 
 </manifest>

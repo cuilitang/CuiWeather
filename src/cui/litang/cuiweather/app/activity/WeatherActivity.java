@@ -2,6 +2,7 @@ package cui.litang.cuiweather.app.activity;
 
 import cui.litang.cuiweather.R;
 import cui.litang.cuiweather.app.model.City;
+import cui.litang.cuiweather.app.service.AutoupdateService;
 import cui.litang.cuiweather.app.util.HttpCallbackListener;
 import cui.litang.cuiweather.app.util.HttpUtils;
 import cui.litang.cuiweather.app.util.ResponseStringUtils;
@@ -70,6 +71,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 
 	/**
 	 * 从SharedPreference文件中读取存储的天气信息，并显示到界面上
+	 * 启动自动更新天气服务
 	 */
 	private void showWeather() {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -82,6 +84,11 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		
 		layout_weather_info.setVisibility(View.VISIBLE);
 		tv_city_name.setVisibility(View.VISIBLE);
+		
+		//启动自动更新天气服务
+		Intent intent = new Intent(this, AutoupdateService.class);
+		startService(intent);
+		
 		
 		
 	}
