@@ -1,6 +1,5 @@
 package cui.litang.cuiweather.app.activity;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
