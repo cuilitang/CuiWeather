@@ -1,7 +1,9 @@
-package cui.litang.cuiweather.app.util;
+package cui.litang.cuiweather.app.newapi.utilsnew;
 
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -29,10 +31,11 @@ public class URLUtils {
 	public static String private_key = "9d632b_SmartWeatherAPI_f5e8ad0";
 	public static String serverURL = "http://open.weather.com.cn/data/";
 	public static String type = "forecast_v";
-	public static String areaid = "101";
+
 	
-	public static String genURL(String shortareaid,String date){
-		areaid += shortareaid;
+	public static String genURL(String areaid){
+
+		String date = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
 		String public_key = serverURL+"?areaid="+areaid+"&type="+type+"&date="+date+"&appid="+appId;
 		String key = KeyUtils.standardURLEncoder(public_key, private_key);
 		String url = serverURL+"?areaid="+areaid+"&type="+type+"&date="+date+"&appid="+appId_six+"&key="+key;
