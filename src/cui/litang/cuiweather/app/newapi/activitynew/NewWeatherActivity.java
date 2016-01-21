@@ -122,23 +122,26 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 		
 		countyId = getIntent().getStringExtra("selected_county");
 		selectedCountyName = getIntent().getStringExtra("selected_county_name");
-		tv_city_name.setText(selectedCountyName);
-		System.out.println(selectedCountyName);
 	
-		
-		if(!TextUtils.isEmpty(countyId)){
-			tv_publish_text.setText("同步中...");
-			layout_weather_info.setVisibility(View.INVISIBLE);
-			tv_city_name.setVisibility(View.VISIBLE);
-						
-			url = URLUtils.genURL(countyId);
-			
-			System.out.println(url);
-			//天气预报的时效性比较强，所以就不用缓存了，但是在联网情况下后台服务会自动去更新天气json信息。
-			getDataFromServer(url);
-		}else {
-			//showWeather();
+		if(TextUtils.isEmpty(selectedCountyName)){
+			selectedCountyName = SPUtils.getString(getApplicationContext(), "selected_county_name", "北京");
 		}
+		tv_city_name.setText(selectedCountyName);
+		
+		if(TextUtils.isEmpty(countyId)){
+			countyId = SPUtils.getString(getApplicationContext(), "selected_county", "101010100");
+		}
+		
+		tv_publish_text.setText("同步中...");
+		layout_weather_info.setVisibility(View.INVISIBLE);
+		tv_city_name.setVisibility(View.VISIBLE);
+					
+		url = URLUtils.genURL(countyId);
+		
+		System.out.println(url);
+		//天气预报的时效性比较强，所以就不用缓存了，但是在联网情况下后台服务会自动去更新天气json信息。
+		getDataFromServer(url);
+		
 		
 		//手动刷新天气 和 更换城市  两个功能
 		btn_refresh_weather = (Button) findViewById(R.id.btn_refresh_weather);

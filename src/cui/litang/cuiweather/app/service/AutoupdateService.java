@@ -31,7 +31,8 @@ public class AutoupdateService extends Service {
 			@Override
 			public void run() {
 				
-				updateWeather();
+				//updateWeather();
+				updateWeatherNew();
 				
 			}
 		}).start();
@@ -44,6 +45,30 @@ public class AutoupdateService extends Service {
 		PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent2, 0);
 		alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
 		return super.onStartCommand(intent, flags, startId);
+	}
+
+	protected void updateWeatherNew() {
+
+		
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		String cityId = preferences.getString("city_id", "");
+		String address = "http://www.weather.com.cn/data/cityinfo/"+cityId+".html";
+		HttpUtils.sendHttpRequest(address, new HttpCallbackListener() {
+			
+			@Override
+			public void onFinish(String response) {
+				Log.d("MainActivity", response);
+				ResponseStringUtils.handleWeatherResponse(AutoupdateService.this, response);
+			}
+			
+			@Override
+			public void onError(Exception e) {
+
+				e.printStackTrace();
+			}
+		});
+	
+		
 	}
 
 	/**

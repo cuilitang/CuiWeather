@@ -6,32 +6,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cui.litang.cuiweather.R;
-import cui.litang.cuiweather.app.activity.ChooseAreaActivity;
-import cui.litang.cuiweather.app.activity.WeatherActivity;
-import cui.litang.cuiweather.app.db.CuiWeatherDB;
-import cui.litang.cuiweather.app.model.City;
-import cui.litang.cuiweather.app.model.County;
-import cui.litang.cuiweather.app.model.Province;
-import cui.litang.cuiweather.app.newapi.dbnew.AreaDBDAO;
-import cui.litang.cuiweather.app.util.HttpCallbackListener;
-import cui.litang.cuiweather.app.util.HttpUtils;
-import cui.litang.cuiweather.app.util.ResponseStringUtils;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import cui.litang.cuiweather.R;
+import cui.litang.cuiweather.app.newapi.dbnew.AreaDBDAO;
+import cui.litang.cuiweather.app.newapi.utilsnew.SPUtils;
 
 public class NewChooseAreaActivity extends Activity {
 	
@@ -55,11 +42,10 @@ public class NewChooseAreaActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		//若是有已经选中的默认城市，则直接进入天气显示，不再从选择地域开始
 		//若是不是从天气界面转回来的（更换默认城市），则直接进入天气显示界面，若是从天气界面转回来的，则继续执行选择地域功能
-		if(prefs.getBoolean("city_selected", false)&&!isFromWeatherActivity){
-			Intent intent = new Intent(this, WeatherActivity.class);
+		if(SPUtils.getBoolean(getApplicationContext(),"county_selected", false)&&!isFromWeatherActivity){
+			Intent intent = new Intent(this, NewWeatherActivity.class);
 			startActivity(intent);
 			finish();
 		}
@@ -96,6 +82,10 @@ public class NewChooseAreaActivity extends Activity {
 				}else if(currentLevel==LEVEL_COUNTY){
 					String selectedCounty = idList.get(position);
 					String selectedCountyName = dataList.get(position);
+					
+					SPUtils.setBoolean(getApplicationContext(), "county_selected", true);
+					SPUtils.setString(getApplicationContext(), "selected_county", selectedCounty);
+					SPUtils.setString(getApplicationContext(), "selected_county_name", selectedCountyName);
 					
 					Intent intent = new Intent(NewChooseAreaActivity.this,NewWeatherActivity.class);
 					intent.putExtra("selected_county", selectedCounty);
