@@ -1,5 +1,7 @@
 package cui.litang.cuiweather.app.service;
 
+import cui.litang.cuiweather.app.newapi.utilsnew.SPUtils;
+import cui.litang.cuiweather.app.newapi.utilsnew.URLUtils;
 import cui.litang.cuiweather.app.receiver.AutoupdateRecevier;
 import cui.litang.cuiweather.app.util.HttpCallbackListener;
 import cui.litang.cuiweather.app.util.HttpUtils;
@@ -47,18 +49,20 @@ public class AutoupdateService extends Service {
 		return super.onStartCommand(intent, flags, startId);
 	}
 
+	/**
+	 * 新版API的自动更新服务
+	 */
 	protected void updateWeatherNew() {
 
 		
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		String cityId = preferences.getString("city_id", "");
-		String address = "http://www.weather.com.cn/data/cityinfo/"+cityId+".html";
-		HttpUtils.sendHttpRequest(address, new HttpCallbackListener() {
+		final String selectedCounty = SPUtils.getString(getApplicationContext(), "selected_county", "101010100");
+		HttpUtils.sendHttpRequest(URLUtils.genURL(selectedCounty), new HttpCallbackListener() {
 			
 			@Override
 			public void onFinish(String response) {
-				Log.d("MainActivity", response);
-				ResponseStringUtils.handleWeatherResponse(AutoupdateService.this, response);
+				
+				SPUtils.setString(getApplicationContext(), selectedCounty, response);
+				System.out.println("后台服务写入了最新天气");
 			}
 			
 			@Override

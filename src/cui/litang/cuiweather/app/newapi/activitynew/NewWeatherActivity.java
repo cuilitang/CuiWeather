@@ -20,11 +20,14 @@ import cui.litang.cuiweather.app.activity.ChooseAreaActivity;
 import cui.litang.cuiweather.app.model.City;
 import cui.litang.cuiweather.app.newapi.dbnew.AreaDBDAO;
 import cui.litang.cuiweather.app.newapi.utilsnew.SPUtils;
+import cui.litang.cuiweather.app.newapi.utilsnew.ServiceUtils;
 import cui.litang.cuiweather.app.newapi.utilsnew.URLUtils;
+import cui.litang.cuiweather.app.service.AutoupdateService;
 import cui.litang.cuiweather.app.util.HttpCallbackListener;
 import cui.litang.cuiweather.app.util.HttpUtils;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -139,8 +142,25 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 		url = URLUtils.genURL(countyId);
 		
 		System.out.println(url);
+		
+		if(SPUtils.getString(getApplicationContext(), "selected_county", "").equals(countyId)&&!SPUtils.getString(getApplicationContext(), countyId, "").isEmpty()){
+			try {
+				parseData(SPUtils.getString(getApplicationContext(), countyId, ""));
+				System.out.println("后台服务读出了最新天气");
+			} catch (JSONException e) {
+				//  Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		//天气预报的时效性比较强，所以就不用缓存了，但是在联网情况下后台服务会自动去更新天气json信息。
 		getDataFromServer(url);
+		
+		//启动自动更新天气服务
+		if(!ServiceUtils.isServiceRunning(getApplicationContext(), AutoupdateService.class.getName())){
+			Intent intent = new Intent(this, AutoupdateService.class);
+			startService(intent);
+		}
+		
 		
 		
 		//手动刷新天气 和 更换城市  两个功能
@@ -149,6 +169,9 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 		
 		btn_refresh_weather.setOnClickListener(this);
 		btn_switch_city.setOnClickListener(this);
+		
+		
+						
 	}
 
 	/**
@@ -239,8 +262,6 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 			tv_wind.setText(windDirection.get(Integer.parseInt(weathers[2]))+windLevel.get(Integer.parseInt(weathers[3])));
 		}
 		layout_weather_info.setVisibility(View.VISIBLE);
-		
-		
 	}
 
 	public String parseForcast(JSONObject f) throws JSONException{
