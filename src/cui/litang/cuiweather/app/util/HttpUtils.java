@@ -44,6 +44,7 @@ public class HttpUtils {
 					}
 					
 				}catch(Exception e){
+					e.printStackTrace();
 					if(listener!=null){
 						listener.onError(e);
 					}

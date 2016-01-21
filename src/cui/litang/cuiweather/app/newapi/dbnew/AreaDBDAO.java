@@ -3,6 +3,7 @@ package cui.litang.cuiweather.app.newapi.dbnew;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -41,5 +42,42 @@ public class AreaDBDAO {
 		cursor.close();
 		db.close();
 		return result;
+	}
+
+	public static ArrayList<String> loadProvince() {
+		
+		openDatabase();
+		ArrayList<String> al = new ArrayList<String>();
+		Cursor cursor = db.rawQuery("select distinct(provcn) from area", null);
+		while(cursor.moveToNext()){
+			al.add(cursor.getString(0));
+		}
+		return al;
+		
+		
+	}
+
+	public static ArrayList<String> loadCityByProvince(String selectedProvince) {
+		
+		openDatabase();
+		
+		ArrayList<String> al = new ArrayList<String>();
+		Cursor cursor = db.rawQuery("select distinct(districtcn) from area where provcn = ?", new String[]{selectedProvince});
+		while(cursor.moveToNext()){
+			al.add(cursor.getString(0));
+		}
+		return al;
+	}
+
+	public static ArrayList<String> loadCountyByCity(String selectedCity) {
+		
+		openDatabase();
+		
+		ArrayList<String> al = new ArrayList<String>();
+		Cursor cursor = db.rawQuery("select id,name from area where districtcn = ?", new String[]{selectedCity});
+		while(cursor.moveToNext()){
+			al.add(cursor.getString(0)+","+cursor.getString(1));
+		}
+		return al;
 	}
 }

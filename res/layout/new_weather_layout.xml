@@ -89,43 +89,25 @@
                 android:textSize="40sp"
                 />
             
-            <!-- 温度范围 -->
-            <LinearLayout 
-				android:layout_width="wrap_content"                
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:orientation="horizontal"
-                >
-                <!-- 最低 -->
+            <!-- 温度 -->
+         
                 <TextView 
-                    android:id="@+id/tv_temp1"
+                    android:id="@+id/tv_temp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textColor="#FFF"
                     android:textSize="40sp"
                     />
-                <TextView 
+      
+             <TextView 
+                    android:id="@+id/tv_wind"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="~"
                     android:textColor="#FFF"
                     android:textSize="40sp"
+                     android:layout_gravity="center"
                     />
-                <!-- 最高 -->
-                <TextView 
-                    android:id="@+id/tv_temp2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#FFF"
-                    android:textSize="40sp"
-                    />
-                
-            </LinearLayout>
             
         </LinearLayout>
         

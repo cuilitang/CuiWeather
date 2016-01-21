@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="cui.litang.cuiweather.app.activity.ChooseAreaActivity"
+            android:name="cui.litang.cuiweather.app.newapi.activitynew.NewChooseAreaActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
