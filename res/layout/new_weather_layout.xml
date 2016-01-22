@@ -50,6 +50,22 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#27a5f9">
+        
+        <!-- 发布时间 -->
+        <TextView 
+            android:id="@+id/tv_pub_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:text="2010-01-05 18:00发布"
+            android:visibility="gone"
+       
+            />
         <!-- "同步中 ...." -->
         <TextView 
             android:id="@+id/tv_publish_text"
@@ -60,7 +76,9 @@
             android:layout_marginTop="10dp"
             android:textColor="#fff"
             android:textSize="18sp"
+            android:layout_below="@id/tv_pub_time"
             />
+        
         
         <!-- 天气信息layout -->
         <LinearLayout 

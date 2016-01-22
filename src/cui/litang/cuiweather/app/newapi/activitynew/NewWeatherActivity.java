@@ -3,6 +3,7 @@ package cui.litang.cuiweather.app.newapi.activitynew;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,6 +104,7 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 	private String countyId;
 	private String pubHour;
 	private String pubDay;
+	private TextView tv_pub_time;
 		   
 	
 	
@@ -122,6 +124,7 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 		tv_temp = (TextView) findViewById(R.id.tv_temp);
 		tv_weather_desc = (TextView) findViewById(R.id.tv_weather_desc);
 		tv_wind = (TextView)findViewById(R.id.tv_wind);
+		tv_pub_time = (TextView) findViewById(R.id.tv_pub_time);
 		
 		countyId = getIntent().getStringExtra("selected_county");
 		selectedCountyName = getIntent().getStringExtra("selected_county_name");
@@ -143,16 +146,16 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 		
 		System.out.println(url);
 		
-		if(SPUtils.getString(getApplicationContext(), "selected_county", "").equals(countyId)&&!SPUtils.getString(getApplicationContext(), countyId, "").isEmpty()){
+		if(!SPUtils.getString(getApplicationContext(), countyId, "").isEmpty()){
 			try {
-				parseData(SPUtils.getString(getApplicationContext(), countyId, ""));
+				parseData(SPUtils.getString(getApplicationContext(), countyId, ""),true);
 				System.out.println("后台服务读出了最新天气");
 			} catch (JSONException e) {
 				//  Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		//天气预报的时效性比较强，所以就不用缓存了，但是在联网情况下后台服务会自动去更新天气json信息。
+		//天气预报的时效性比较强,在联网情况下后台服务会自动去更新天气json信息。
 		getDataFromServer(url);
 		
 		//启动自动更新天气服务
@@ -188,7 +191,8 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 				runOnUiThread(new Runnable() {
 					public void run() {
 						try {
-							parseData(response);
+							parseData(response,false);
+							SPUtils.setString(getApplicationContext(), countyId, response);
 						} catch (JSONException e) {
 							// Auto-generated catch block
 							e.printStackTrace();
@@ -216,7 +220,7 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 	 * 解析json
 	 * @throws JSONException 
 	 */
-	protected void parseData(String response) throws JSONException {
+	protected void parseData(String response,boolean isCache) throws JSONException {
 		
 		System.out.println(response);
 		
@@ -232,19 +236,34 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 		String nowDay = new SimpleDateFormat("dd").format(new Date());
 		pubDay = pubTime.substring(6,8);
 		
-		
-		if(pubDay.equals(nowDay)){
+		if(isCache){
+			tv_pub_time.setVisibility(View.VISIBLE);
+			showWeather(todayWeather);
+			try {
+				Date date = new SimpleDateFormat("yyyyMMddHHmm").parse(pubTime);
+				 String format = new SimpleDateFormat("yyyy-MM-dd HH：mm").format(date);
+				 tv_pub_time.setVisibility(View.VISIBLE);
+				 tv_pub_time.setText(format+"发布");
+				 tv_current_date.setText(new SimpleDateFormat("yyyy年MM月dd日").format(date));
+			} catch (ParseException e) {
+				//  Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-				showWeather(todayWeather);
-				tv_publish_text.setText("今天"+pubTime.substring(8,10)+":00发布");
 		}else{
-			
-			showWeather(tomorrowWeather);
-			tv_publish_text.setText("昨天"+pubTime.substring(8,10)+":00发布");
-
+		
+			if(pubDay.equals(nowDay)){
+				
+					showWeather(todayWeather);
+					tv_publish_text.setText("今天"+pubTime.substring(8,10)+":00发布");
+					tv_pub_time.setVisibility(View.GONE);
+			}else{
+				
+				showWeather(tomorrowWeather);
+				tv_publish_text.setText("昨天"+pubTime.substring(8,10)+":00发布");
+				tv_pub_time.setVisibility(View.GONE);
+			}
 		}
-		
-		
 	}
 		
 	/**
