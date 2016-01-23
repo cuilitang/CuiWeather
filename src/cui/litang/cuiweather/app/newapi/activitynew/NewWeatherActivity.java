@@ -300,7 +300,7 @@ public class NewWeatherActivity extends Activity implements OnClickListener{
 		System.out.println("白天风"+daywinddirection+daywindlevel);
 		System.out.println("发布时间"+pubTime);
 		pubHour = pubTime.substring(8,10);
-		if(!pubHour.equals("18")){
+		if(!dayweather.isEmpty()){
 			weather = dayweather+","+daytemp+"℃ ~ "+nighttemp+"℃"+","+daywinddirection+","+daywindlevel+","+pubTime;
 		}else{
 			weather = nightweather+","+nighttemp+"℃"+","+nightwinddirection+","+nightwindlevel+","+pubTime;
